@@ -1,0 +1,1 @@
+from .factcheckers.base import FactChecker

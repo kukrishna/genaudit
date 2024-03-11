@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+    <meta charset="UTF-8">
+    <title>GenAudit</title>
+
+    <link rel="stylesheet" href="./static/resource_files/docs.css">
+    <link rel="stylesheet" href="./static/resource_files/codemirror.css">
+    <link rel="stylesheet" href="./static/resource_files/show-hint.css">
+
+    <link rel="stylesheet" href="./static/resource_files/dialog.css">
+    <link rel="stylesheet" href="./static/resource_files/matchesonscrollbar.css">
+
+    <script src="./static/resource_files/codemirror.js"></script>
+    <script src="./static/resource_files/show-hint.js"></script>
+    <script src="./static/resource_files/javascript.js"></script>
+    <script src="./static/resource_files/markdown.js"></script>
+    <script src="./static/resource_files/active-line.js"></script>
+
+    <script src="./static/resource_files/dialog.js"></script>
+    <script src="./static/resource_files/searchcursor.js"></script>
+    <script src="./static/resource_files/search.js"></script>
+    <script src="./static/resource_files/annotatescrollbar.js"></script>
+    <script src="./static/resource_files/matchesonscrollbar.js"></script>
+    <script src="./static/resource_files/jump-to-line.js"></script>
+    <script src="./static/resource_files/match-highlighter.js"></script>
+
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-animate.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-sanitize.js"></script>
+
+   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/cosmo/bootstrap.min.css" rel="stylesheet" integrity="sha384-9/chHLTCcBULgxOFoUyZXSgEF0uFXs+NrQqzcy/DXqcR+Sk8C1l4EgmUXAEzTb92" crossorigin="anonymous">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+
+
+    <link href="./static/style.css" rel="stylesheet">
+
+    <script src="./static/example.js"></script>
+
+  </head>
+  <body>
+
+
+<div ng-controller="FactChecker" ng-app="newapp" ng-init="init_editor()">
+
+  <div class="row" style="height: 10vh; width:100vw; padding-top:2vh; padding-bottom:0vh; padding-left: 4vw; padding-right:4vw;">
+        <div class="intro-header col-sm-4">
+            <img src="./static/logo.png" style="height: 8vh;">
+            <span>GenAudit</span>
+        </div>
+        <div class="col-sm-3" style=" padding-top:1vh;padding-left: 3vw;">
+            <form>
+              <fieldset>
+                  <span><b>Example:</b></span>
+                <div class="form-group">
+                  <select class="form-select" id="selectex">
+                      <option disabled selected value> -- select an example -- </option>
+                      <option ng-repeat="oneid in all_example_ids" ng-attr-value="{{oneid.val}}">{{oneid.label}}</option>
+                  </select>
+                </div>
+              </fieldset>
+            </form>
+        </div>
+
+        <div class="col-sm-5">
+            <div class="input-group" style="width:100%; padding-right: 5%;">
+             <input type="text"  class="form-control" id="question_txt" aria-describedby="enterQuery" placeholder="Enter query">
+            <button id="qa_button" class="btn btn-secondary" ng-click="qa_generic()"><i class='fa fa-play-circle'></i>&nbsp;&nbsp;Query</button>
+            </div>
+        </div>
+
+
+  </div>
+      <div class="row" style="height: 10vh; width:100vw; padding-top:2vh; padding-bottom:0vh; padding-left: 4vw; padding-right:4vw;">
+
+          <div class="col-sm-7">
+
+                <div class="form-group">
+                <button id="srcedit_btn" class="btn btn-secondary" ng-click="toggle_srcedit()"><i ng-class="src_unlocked ? 'fa fa-unlock' : 'fa fa-lock'"></i>&nbsp;{{src_unlocked ? ' Done ' : ' Edit Source '}}</button>
+                <button id="tokenize_btn" ng-show="src_unlocked" class="btn btn-secondary" ng-click="tokenize_source()"><i class='fa fa-scissors'></i>&nbsp;Break into sentences</button>
+
+                <button id="save_btn" style="margin-left: 0.5em;" class="btn btn-secondary" onclick='$("#save_modal").modal("show")'><i class='fa fa-save'></i>&nbsp;&nbsp;&nbsp;Save </button>
+
+                 </div>
+          </div>
+
+          <div class="col-sm-5 align-items-center">
+
+                  <button id="checkall_button" class="btn btn-secondary" ng-click="checkall()"><i class='fa fa-refresh'></i>&nbsp;&nbsp;Fact Check All</button>&nbsp;&nbsp;
+
+                    <div class="custom-control custom-switch" style="display: inline-block; margin-left: 1em;">
+                      <input type="checkbox" class="custom-control-input" id="customSwitch1" ng-model="autocheck">
+                      <label class="custom-control-label" for="customSwitch1">LiveMode</label><span style="cursor: help;" data-toggle="tooltip" title="If enabled, fact-checks would trigger automatically when text is updated." data-placement="top"> <i id="livemode-info" class="fa fa-circle-info"></i></span>
+                    </div>
+
+
+          </div>
+
+        </div>
+
+
+  <div class="row" style="height: 74vh; width:100vw; padding-left: 4vw; padding-right:4vw;">
+
+      <div class="col-sm-7" style="padding-right: 0px;">
+        <div>
+
+            <div class="row">
+                <div class="col-sm-10" style="height: 74vh; padding-right:0px;">
+                  <form style="height: 100%"><textarea style="display: none;" id="sourcearea" name="sourcearea"></textarea></form>
+                </div>
+
+                <div class="col-sm-2" id="bookmark_gutter" style="padding-left:0px;">
+
+                </div>
+
+            </div>
+
+        </div>
+      </div>
+
+
+          <div>
+            <div class="reference_closeup" ng-click="handle_click_on_closeup()">
+
+            </div>
+          </div>
+
+
+      <div class="col-sm-5" style="height: 74vh; padding-left: 0px;">
+          <form style="height: 100%"><textarea style="display: none;" id="notearea" name="notearea"></textarea></form>
+      </div>
+
+    </div>
+
+
+
+  <div class="modal" id="config_modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Welcome!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div>
+              GenAudit is a tool to fact-check text, especially AI-generated text against reference documents.
+              If you would like a tutorial on how to use the system, please visit:
+              <a href="https://genaudit.org/tutorial/" target="_blank">https://genaudit.org/tutorial/</a> <br>
+              Below you can see the configurations of the backend models powering this interface:
+          </div>
+
+        <div style="margin-top: 2em;">
+          <h5>🚀 Fact-checking model </h5>
+          <b>Model name:</b> {{backend_config.factcheck_model.model_name_or_path}}<br>
+          <b>Num processes:</b> {{backend_config.factcheck_model.num_procs}}<br>
+        </div>
+
+        <div style="margin-top: 2em; margin-bottom: 2em;">
+          <h5>🚀 QA model </h5>
+            <div ng-if="backend_config.qa_model.model_name_or_path===''">
+                <span style="color: darkred;">QA model not running</span>
+            </div>
+            <div ng-if="backend_config.qa_model.model_name_or_path!==''">
+              <b>Model name:</b> {{backend_config.qa_model.model_name_or_path}}<br>
+              <b>Quantization:</b> {{backend_config.qa_model.quantization}}<br>
+              <b>Max output length:</b> {{backend_config.qa_model.max_decode_len}}<br>
+            </div>
+        </div>
+
+        <div style="margin-top: 2em;">
+          <b>Max reference length:</b> {{backend_config.max_doc_words}} words<br>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+  <div class="modal" id="save_modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Save to server</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <label for="saving_id">ID:</label>
+          <input type="text" id="saving_id" ng-model="saving_id_val">
+            <br><br>
+          Notes: <br>
+          <textarea id="saving_notes" ng-model="saving_notes_val" style="width:100%; height:400px;" placeholder="E.g. where is this example from? What does it highlight? ..."></textarea>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="save_example_submit()" ng-disabled="saving_id_val===undefined||saving_id_val.length===0">Save</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+  </div>
+
+    <div ng-repeat="book in refs[active_editor_line_refcode] track by $index"
+                 ng-mouseover="tease_in_book($index)"
+                 ng-mouseout="tease_out_book($index)"
+                 ng-click="conv_scroll_to_pos(create_bookmark_obj(book).scroll_target)"
+                 ng-style="{'height':'0px'}"
+                 >
+
+        <div ng-class="is_visible_evidence(book) ? 'visible_evlink' : 'invisible_evlink'" ng-style="{'left':create_bookmark_obj(book).left+'px', 'width':((create_bookmark_obj(book).width/(refs[active_editor_line_refcode].length+1))*($index+1)+link_thickness)+'px', 'position':'absolute', 'top':(create_bookmark_obj(book).beg_top)+'px', 'height': link_thickness+'px', 'z-index':999}"
+             ng-attr-id="{{ 'bkmrk' + $index}}"></div>&nbsp;
+        <div ng-class="is_visible_evidence(book) ? 'visible_evlink' : 'invisible_evlink'" ng-style="{'left':(create_bookmark_obj(book).left+(create_bookmark_obj(book).width/(refs[active_editor_line_refcode].length+1))*($index+1))+'px', 'position':'absolute', 'top':(create_bookmark_obj(book).top)+'px', 'height':(create_bookmark_obj(book).height+link_thickness)+'px', 'width': link_thickness+'px'}"></div>&nbsp;
+        <div ng-if="$index==0" ng-class="{'targpointer':true, 'hide_pointer':!is_visible_evidence_summ(book)}" ng-style="{'left':(create_bookmark_obj(book).left+(create_bookmark_obj(book).width/(refs[active_editor_line_refcode].length+1))*($index+1)+link_thickness)+'px', 'width':(create_bookmark_obj(book).width-((create_bookmark_obj(book).width/(refs[active_editor_line_refcode].length+1))*($index+1)+link_thickness))+'px', 'position':'absolute', 'top':(create_bookmark_obj(book).end_top)+cm.defaultTextHeight()/2-link_thickness/2+'px', 'height': link_thickness+'px'}"></div>&nbsp;
+        <div ng-class="{'pointer': true, 'visible_evlink':is_visible_evidence_src(book), 'invisible_evlink':!is_visible_evidence_src(book), 'hide_pointer':!is_visible_evidence_summ(book)}" ng-style="{'left':(create_bookmark_obj(book).left+(create_bookmark_obj(book).width/(refs[active_editor_line_refcode].length+1))*($index+1))+'px', 'width':2*cm.defaultCharWidth()+'px', 'position':'absolute', 'top':(create_bookmark_obj(book).scrollbar_end_top)+'px', 'height': cm.defaultTextHeight()+'px'}"></div>
+    </div>
+
+<div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-autohide="true" data-delay="2000" data-animation="true">
+  <div class="toast-header">
+    <i class="fa fa-info-circle" style="color: darkred;"></i> &nbsp;&nbsp;
+    <span class="mr-auto" id="toast_header">Alert</span>
+
+    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="toast-body" id="toast_text">
+
+  </div>
+</div>
+
+
+
+</div>
+
+</body>
+</html>
+

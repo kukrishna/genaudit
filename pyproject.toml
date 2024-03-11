@@ -1,0 +1,46 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "genaudit"
+version = "0.1"
+dependencies = [
+  "transformers>=4.34.0",
+  "accelerate>=0.21.1",
+  "peft>=0.4.1",
+  "bitsandbytes>=0.39.1",
+  "accelerate",
+  "einops>=0.6.1",
+  "bottle==0.12.23",
+  "nltk",
+  "jsonlines",
+  "sentencepiece",
+  "paste",
+  "spacy",
+  "tiktoken",
+  "openai",
+  "tenacity"
+]
+requires-python = ">=3.8"
+authors = [
+  {name = "Kundan Krishna", email = "kundan.krishna99@gmail.com"},
+]
+maintainers = [
+  {name = "Kundan Krishna", email = "kundan.krishna99@gmail.com"}
+]
+description = "GenAudit is a tool to fact-check text, especially AI-generated text against reference documents."
+readme = "README.md"
+license = "Apache-2.0"
+keywords = ["llm", "factchecking", "nli", "evidence", "nlp"]
+classifiers = [
+  "Programming Language :: Python"
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["genaudit"]
+
+
+[project.urls]
+Homepage = "http://genaudit.org"
+Repository = "https://github.com/kukrishna/genaudit.git"

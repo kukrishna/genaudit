@@ -1,0 +1,208 @@
+
+.form-group{
+    margin-left: 1%;
+    margin-top: 1%;
+}
+
+.button-pad{
+    margin-left: 4px;
+}
+
+.leftmar{
+    margin-left: 1%;
+}
+
+.button-black-text{
+    color:black;
+}
+
+
+.loader {
+    border: 6px solid #d3d3d3; /* Light grey */
+    border-top: 6px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+
+/*scrollbar from here*/
+/*https://css-tricks.com/almanac/properties/s/scrollbar/*/
+.prettyscroll::-webkit-scrollbar {
+  width: 1em;
+}
+
+.prettyscroll::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.prettyscroll::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+
+
+.reference_closeup{
+    position: absolute;
+    background: #000000;
+    font-size: 1.2em;
+    color: white;
+    border-radius: 1.4em;
+    padding:1em;
+    visibility: hidden;
+    z-index: 99;
+    transform: translateY(-50%);
+}
+
+
+.intro-header{
+    width: 40%;
+    font-size: 2em;
+}
+
+
+.btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .show>.btn-primary.dropdown-toggle {
+    color: #fff;
+    background-color: #0084ff;
+    border-color: #111111;
+}
+
+
+.cm_section_heading{
+    font-size: 14pt;
+    font-weight: bold;
+}
+
+.cm_important{
+    font-weight: bold;
+}
+
+
+.CodeMirror-activeline-background{
+    background: #ffb3c0;
+}
+
+
+.unsup_span{
+    background: #99484d;
+    color: white;
+    /*text-decoration: line-through;*/
+}
+
+.err_span{
+    background: #99484d;
+    color: white;
+    text-decoration: line-through;
+}
+
+.reference_closeup:after {
+	content: '';
+	position: absolute;
+	right: 0;
+	top: 50%;
+	width: 0;
+	height: 0;
+	border: 12px solid transparent;
+	border-left-color: #fff4fd;
+	border-right: 0;
+	margin-top: -12px;
+	margin-right: -12px;
+}
+
+.evidence{
+    background: lightblue;
+}
+
+
+.visible_evlink {
+    background-color: lightblue;
+}
+
+
+.invisible_evlink {
+    background-color: #ffb3c0;
+    visibility: hidden;
+}
+
+.pointer{
+    z-index: 10;
+}
+
+.invisible_evlink.pointer{
+    visibility: visible;
+}
+
+.invisible_evlink.pointer.hide_pointer{
+    visibility: hidden;
+}
+.visible_evlink.pointer.hide_pointer{
+    visibility: hidden;
+}
+
+.targpointer{
+    visibility: visible;
+    background-color: #ffb3c0;
+    z-index: -1;
+}
+
+.targpointer.hide_pointer{
+    visibility: hidden;
+}
+
+
+.toast {
+    position: absolute;
+    left: 30%;
+    top: 5%;
+    z-index: 999999;
+}
+
+.toast-header {
+    font-size: 1.4em;
+}
+
+.toast-body {
+    font-size: 1.3em;
+}
+
+
+.status {
+    width: 1.2em;
+    color: #822;
+}
+
+
+.play-button {
+    cursor:pointer;
+}
+
+
+.loading-overlay {
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.5); /* 50% opacity */
+position: absolute;
+top: 0;
+left: 0;
+z-index: 1001; /* Place the overlay above the existing div */
+backdrop-filter: blur(0.3em);
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+body, .btn, .form-control {
+   font-size: min(16px, 2.5vh);
+}
+
+.form-control, .btn-secondary{
+    padding: 0.175rem 0.25rem;
+}
+
