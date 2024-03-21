@@ -4,7 +4,7 @@ import spacy
 
 
 class FactChecker(object):
-    def __init__(self, model_name, allow_additions=False, **kwargs):
+    def __init__(self, model_name, allow_additions=False, distributed=False, **kwargs):
         self.allow_additions = allow_additions
 
         parts = model_name.split(":")
@@ -12,7 +12,9 @@ class FactChecker(object):
         model_name = ":".join(parts[1:])
 
         if protocol == "hf":
-            self.model = HFPredictor(model_name=model_name, **kwargs)
+            self.model = HFPredictor(
+                model_name=model_name, distributed=distributed, **kwargs
+            )
         else:
             print(
                 "Unrecognized protocol passed for factchecking model. Currently supported protocols are: hf(huggingface)"

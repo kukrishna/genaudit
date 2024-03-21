@@ -5,22 +5,36 @@ from transformers import (
     AutoModelForCausalLM,
 )
 import torch.nn.functional
+from huggingface_hub import snapshot_download
 from transformers import BitsAndBytesConfig
+from accelerate.utils import BnbQuantizationConfig as AcceleratedBitsAndBytesConfig
+from accelerate.utils import load_and_quantize_model
+from accelerate import init_empty_weights
 from peft import PeftModel
 from peft import PeftConfig
 
 
 class HFPredictor(object):
-    def __init__(self, model_name, gpu_idx=0, nbeams=4, max_decode_len=999):
+    def __init__(
+        self, model_name, distributed=False, gpu_idx=0, nbeams=4, max_decode_len=999
+    ):
         adapter_config = PeftConfig.from_pretrained(model_name)
         base_model_name_or_path = adapter_config.base_model_name_or_path
 
-        bnb_config = BitsAndBytesConfig(
-            load_in_4bit=True,
-            bnb_4bit_use_double_quant=True,
-            bnb_4bit_quant_type="nf4",
-            bnb_4bit_compute_dtype=torch.bfloat16,
-        )
+        if distributed:
+            bnb_config = AcceleratedBitsAndBytesConfig(
+                load_in_4bit=True,
+                bnb_4bit_use_double_quant=True,
+                bnb_4bit_quant_type="nf4",
+                bnb_4bit_compute_dtype=torch.bfloat16,
+            )
+        else:
+            bnb_config = BitsAndBytesConfig(
+                load_in_4bit=True,
+                bnb_4bit_use_double_quant=True,
+                bnb_4bit_quant_type="nf4",
+                bnb_4bit_compute_dtype=torch.bfloat16,
+            )
 
         tokenizer = AutoTokenizer.from_pretrained(
             base_model_name_or_path, use_fast=False
@@ -39,11 +53,22 @@ class HFPredictor(object):
         else:
             model_cls = AutoModelForCausalLM
 
-        model = model_cls.from_pretrained(
-            base_model_name_or_path,
-            quantization_config=bnb_config,
-            device_map={"": gpu_idx},
-        )
+        if distributed:
+            weights_location = snapshot_download(base_model_name_or_path)
+            with init_empty_weights():
+                empty_model = model_cls.from_config(config)
+            model = load_and_quantize_model(
+                empty_model,
+                weights_location=weights_location,
+                bnb_quantization_config=bnb_config,
+                device_map="auto",
+            )
+        else:
+            model = model_cls.from_pretrained(
+                base_model_name_or_path,
+                quantization_config=bnb_config,
+                device_map={"": gpu_idx},
+            )
 
         model.config.use_cache = True
 
