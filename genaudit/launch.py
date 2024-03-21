@@ -138,6 +138,12 @@ if __name__ == "__main__":
         default="",
         help="path to a directory for saving data (reference doc, questions, and responses after potential editing).",
     )
+    parser.add_argument(
+        "--distributed",
+        type=bool,
+        default=False,
+        help="Use FactChecker with HF accelerate's  distributed inference",
+    )
 
     args = parser.parse_args()
 
@@ -168,6 +174,7 @@ if __name__ == "__main__":
         fc_towait_events.append(init_event)
         constructor_args = {
             "model_name": args.factcheck_model,
+            "distributed": args.distributed,
             "gpu_idx": gpu_counter,
             "nbeams": args.fc_nbeams,
             "max_decode_len": args.fc_max_decode_len,
