@@ -140,8 +140,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--distributed",
-        type=bool,
-        default=False,
+        action="store_true",
         help="Use FactChecker with HF accelerate's  distributed inference",
     )
 
