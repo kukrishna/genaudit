@@ -42,6 +42,19 @@ For example, the command below would start a server with a fine-tuned FlanUL2 mo
 Depending on the GPU memory available, you may want to use a smaller fact-checking model.
 See https://genaudit.org to see the other fact-checking models available.
 
+More examples:
+
+```shell
+ # if you have single gpu (both models loaded on the same gpu)
+  python -m genaudit.launch --port <port-value> --qa-model hf:mistralai/Mistral-7B-Instruct-v0.1 \
+    --factcheck-model hf:kundank/genaudit-usb-flanul2 --num-factcheck-processes 1 \
+    --use-single-gpu --qa-quantize 4bit
+
+  # using OpenAI models for QA (e.g. gpt-3.5-turbo)
+  python -m genaudit.launch --port <port-value> --qa-model oai:gpt-3.5-turbo-16k-0613  \
+    --factcheck-model hf:kundank/genaudit-usb-flanul2 --num-factcheck-processes 1 --use-single-gpu
+```
+
 
 ## API usage
 
