@@ -11,6 +11,7 @@ For technical details, please read the paper: https://arxiv.org/abs/2402.12566
 ## Installation
 
 GenAudit can be installed via PyPi with the command `pip install genaudit`
+You need to use python version 3.9 to install and use this package.
 You can then use the tool via an interactive interface, or via a the library's API in your Python code.
 
 ## Running the interactive tool 
