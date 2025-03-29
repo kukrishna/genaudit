@@ -32,7 +32,7 @@ For example, the command below would start a server with a fine-tuned FlanUL2 mo
 
 ```shell
   # if you have 4 gpus to use
-  python -m genaudit.launch --port 7000 --qa-model hf:mistralai/Mistral-7B-Instruct-v0.1 \
+  python -m genaudit.launch --port 7000 --qa-model hf:tiiuae/falcon-7b-instruct \
     --factcheck-model hf:kundank/genaudit-usb-flanul2 --num-factcheck-processes 3 \
     --qa-quantize 4bit
     
@@ -46,7 +46,7 @@ More examples:
 
 ```shell
  # if you have single gpu (both models loaded on the same gpu)
-  python -m genaudit.launch --port <port-value> --qa-model hf:mistralai/Mistral-7B-Instruct-v0.1 \
+  python -m genaudit.launch --port <port-value> --qa-model hf:tiiuae/falcon-7b-instruct \
     --factcheck-model hf:kundank/genaudit-usb-flanul2 --num-factcheck-processes 1 \
     --use-single-gpu --qa-quantize 4bit
 
