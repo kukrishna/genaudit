@@ -22,7 +22,7 @@ dependencies = [
   "openai",
   "tenacity"
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9,<3.10"
 authors = [
   {name = "Kundan Krishna", email = "kundan.krishna99@gmail.com"},
 ]
