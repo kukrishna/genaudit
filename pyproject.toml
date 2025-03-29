@@ -6,11 +6,11 @@ build-backend = "hatchling.build"
 name = "genaudit"
 version = "0.1"
 dependencies = [
-  "transformers>=4.34.0",
-  "accelerate>=0.21.1",
-  "peft>=0.4.1",
+  "transformers==4.38.1",
+  "huggingface_hub==0.24.7",
+  "accelerate==0.32.1",
+  "peft==0.5.0",
   "bitsandbytes>=0.39.1",
-  "accelerate",
   "einops>=0.6.1",
   "bottle==0.12.23",
   "nltk",
